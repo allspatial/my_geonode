@@ -1,0 +1,38 @@
+.navbar-brand {
+    background:url(../img/seychelles.png) no-repeat;
+    height:40px;
+    margin-right:15px;
+    margin-top:10px;
+    margin-bottom:5px;
+    text-indent:-9999em;
+    width:40px
+}
+
+.navbar-inverse {
+    background-color: #9eb343;
+    border-radius: 0;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: #333;
+}
+
+.jumbotron {
+    background:url(../img/seychelles_beach_2.jpg);
+    background-size:cover;
+    color:#1867f0;
+    padding:40px 0 60px;
+    text-shadow:2px 2px 2px rgba(0,0,0,0.4);
+    margin-top:-10px
+}
+
+.jumbotron p {
+    color: #111;
+    font-weight: 400;
+    margin-bottom: 0;
+    text-shadow: none;
+}
+
+.jumbotron a {
+    color: #fff;
+}

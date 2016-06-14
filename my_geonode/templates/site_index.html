@@ -3,13 +3,46 @@
 {% comment %}
 This is where you can override the hero area block. You can simply modify the content below or replace it wholesale to meet your own needs. 
 {% endcomment %}
-  {% block hero %}
-  <div class="jumbotron">
+
+    {% block title %} {% trans "Seychelles Data Sharing" %} {% endblock %}
+
+    {% block hero %}
+    <div class="jumbotron">
     <div class="container">
-      <h1>{% trans "Welcome" %}</h1>
-      <p>{% blocktrans %}GeoNode is an open source platform for sharing geospatial data and maps.{% endblocktrans %}</p>
-      <p>{% blocktrans %}If you have any questions about the software or service, join our <a href="https://groups.google.com/d/forum/geonode-users">mailing list</a>.{% endblocktrans %}</p>
-      <span>{% trans 'Need help?' %} <a href="http://docs.geonode.org/en/latest/tutorials/users/quickstart/index.html">{% trans 'Getting Started' %}</a></span>
+      <h1>{% trans "Sharing Seychelles Geospatial Data" %}</h1>
+    <p>{% blocktrans %}Welcome to the data sharing platform of the Seychelles Geospatial Working Group, a group of professionals in the geospatial sector from various government and non-government organisations.{% endblocktrans %}</p>
+      <p>{% blocktrans %}While some of the data is available to the member organisations only, the majority of data on this platform is accessible by everyone.{% endblocktrans %}</p>
+      <span><a href="https://www.facebook.com/groups/1555281151430213/">{% trans 'Visit the Working Group on Facebook' %}</a></span>
     </div>
-  </div>
-  {% endblock %}
+    </div>
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            {% trans "Featured by" %} <a href="http://geonode.org">{% trans "GeoNode" %}</a> <em>{% trans "version" %} {{ VERSION }}</em> |
+            <a href="{% url "developer" %}">{% trans "Developers" %}</a> |
+            <a href="{% url "about" %}">{% trans "About" %}</a>
+          </div>
+          <div class="col-md-4">
+            <label class="hidden">{% trans "Language" %}</label>
+            {% if csrf_token != "NOTPROVIDED" %}
+            {% get_current_language as LANGUAGE %}
+            <form class="form-inline" action="/i18n/setlang/" method="post">
+            {% csrf_token %}
+              <select class="col-md-6 pull-right" name="language" onchange="javascript:form.submit()">
+                {% for lang in LANGUAGES %}
+                <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
+                  {{ lang.1 }}
+                </option>
+                {% endfor %}
+              </select>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </footer>
+    {% endblock footer %}

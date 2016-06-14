@@ -10,22 +10,17 @@ Install the native dependencies for your platform.
 
 Install virtualenv and virtualenvwrapper, Create a local virtual environment for your project and install Django into it.::
 
+    $ mkdir ~/VirtualEnvs
+    $ cd ~/VirtualEnvs
     $ mkvirtualenv my_geonode
     $ pip install Django==1.8.12
 
 Create a new template based on the geonode example project.::
-    
+
     $ django-admin.py startproject my_geonode --template=https://github.com/GeoNode/geonode-project/archive/master.zip -epy,rst,yml -n Vagrantfile
 
 .. note:: You should NOT use the name geonode for your project as it will conflict with the default geonode package name.
-
-Install the dependencies for your geonode project into your local virtual environment::
-
-    $ pip install -e my_geonode
-
-Install and Configure GeoServer
-
-.. note:: At this point, you should put your project under version control using Git or similar.
+.. note:: Put your "my_geonode" project under version control using GitHub or similar.
 
 Using ansible for Automated Deploys
 -----------------------------------
@@ -43,7 +38,22 @@ Next, you will need to install the ansible role for geonode::
 Setting up a vagrant box
 -------------------------
 
-Setup VirtualBox and install vagrant, then setup your virtual machine with::
+Setup VirtualBox and install vagrant.
+Edit the playbook.yml file:
+
+    + Set remote_user and deploy_user to "vagrant".
+    + Set github_user to the username of your GitHub account.
+    + Set server_name to 192.168.56.151 (This is the same IP address as used in the Vagrantfile.).
+
+Edit Vagrantfile and add the line as follows:
+
+    config.vm.network :private_network, ip: "192.168.56.151"
+
+Remove this line from Vagrantfile:
+
+    config.vm.network "forwarded_port", guest: 80, host: 8000
+
+Then setup your virtual machine with:
 
     $ vagrant up
 
@@ -64,8 +74,10 @@ Then you can run the playbook to install the my_geonode  project::
 Basic Usage
 -----------
 
-Setup the database::
+Log on to the Virtual Machine vis SSH and setup the database (creating the database is a one-time setup):
 
+    $ vagrant ssh
+    $ cd my_geonode
     $ python manage.py syncdb
 
 .. note:: You will be asked to provide credentials for the superuser account.

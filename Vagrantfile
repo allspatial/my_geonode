@@ -7,7 +7,12 @@ Vagrant.configure("2") do |config|
 
   config.vm.define :production do |production|
   	production.vm.network :public_network, :bridge => 'eth0', :auto_config => false
-    config.vm.network "forwarded_port", guest: 80, host: 8000
+    # Instead of:
+    # config.vm.network "forwarded_port", guest: 80, host: 8000
+
+    # Create a private network, which allows host-only access to the machine using a specific IP.
+    config.vm.network :private_network, ip: "192.168.56.151"
+
     production.vm.provider :virtualbox do |vb|
         vb.customize [ "modifyvm", :id, "--name", "my_geonode-prod","--memory", 4096 ]
   	end
