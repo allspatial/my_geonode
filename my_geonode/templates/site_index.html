@@ -1,5 +1,7 @@
 {% extends 'index.html' %}
 {% load i18n %}
+{% load latest_layers %}
+
 {% comment %}
 This is where you can override the hero area block. You can simply modify the content below or replace it wholesale to meet your own needs. 
 {% endcomment %}
@@ -18,31 +20,20 @@ This is where you can override the hero area block. You can simply modify the co
     {% endblock %}
 
     {% block footer %}
+    {% last_three_layers as layers %}
     <footer class="footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-8">
-            {% trans "Featured by" %} <a href="http://geonode.org">{% trans "GeoNode" %}</a> <em>{% trans "version" %} {{ VERSION }}</em> |
-            <a href="{% url "developer" %}">{% trans "Developers" %}</a> |
-            <a href="{% url "about" %}">{% trans "About" %}</a>
-          </div>
-          <div class="col-md-4">
-            <label class="hidden">{% trans "Language" %}</label>
-            {% if csrf_token != "NOTPROVIDED" %}
-            {% get_current_language as LANGUAGE %}
-            <form class="form-inline" action="/i18n/setlang/" method="post">
-            {% csrf_token %}
-              <select class="col-md-6 pull-right" name="language" onchange="javascript:form.submit()">
-                {% for lang in LANGUAGES %}
-                <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
-                  {{ lang.1 }}
-                </option>
-                {% endfor %}
-              </select>
-            </form>
-            {% endif %}
-          </div>
+        <div id="featured_header">
+            <h3>Latest Contributions</h3>
         </div>
-      </div>
+        <div id="featured_data">
+            {% for layer in layers %}
+                <div class="featured_dataset">
+                    <a href="{{ layer.detail_url }}"><img class="thumb" src="{{ layer.thumbnail_url }}" /></a>
+                    <h4> {{layer.title}} </h4>
+                    <p class="date_and_owner">{{ layer.date }} by {{layer.owner}}</p>
+                    <p> {{layer.abstract}} </p>
+                </div>
+            {% endfor%}
+        </div>
     </footer>
     {% endblock footer %}
