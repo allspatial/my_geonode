@@ -1,39 +1,93 @@
 {% extends 'index.html' %}
 {% load i18n %}
-{% load latest_layers %}
+{% load base_tags %}
+{% load featured_stuff %}
 
-{% comment %}
-This is where you can override the hero area block. You can simply modify the content below or replace it wholesale to meet your own needs. 
-{% endcomment %}
+{% block title %}{% trans "Seychelles Data Sharing" %}{% endblock %}
 
-    {% block title %} {% trans "Seychelles Data Sharing" %} {% endblock %}
-
-    {% block hero %}
+{% block hero %}
     <div class="jumbotron">
-    <div class="container">
-      <h1>{% trans "Sharing Seychelles Geospatial Data" %}</h1>
-    <p>{% blocktrans %}Welcome to the data sharing platform of the Seychelles Geospatial Working Group, a group of professionals in the geospatial sector from various government and non-government organisations.{% endblocktrans %}</p>
-      <p>{% blocktrans %}While some of the data is available to the member organisations only, the majority of data on this platform is accessible by everyone.{% endblocktrans %}</p>
-      <span><a href="https://www.facebook.com/groups/1555281151430213/">{% trans 'Visit the Working Group on Facebook' %}</a></span>
-    </div>
-    </div>
-    {% endblock %}
-
-    {% block footer %}
-    {% last_three_layers as layers %}
-    <footer class="footer">
-        <div id="featured_header">
-            <h3>Latest Contributions</h3>
+        <div class="container">
+            <h1>{% trans "Sharing Seychelles Geospatial Data" %}</h1>
+            <p>{% blocktrans %}Welcome to the data sharing platform of the Seychelles Geospatial Working Group, a group of professionals in the geospatial sector from various government and non-government organisations.{% endblocktrans %}</p>
+            <p>{% blocktrans %}While some of the data is available to the member organisations only, the majority of data on this platform is accessible by everyone.{% endblocktrans %}</p>
+            <span><a href="https://www.facebook.com/groups/1555281151430213/">{% trans 'Visit the Working Group on Facebook' %}</a></span>
         </div>
-        <div id="featured_data">
+    </div>
+{% endblock %}
+
+{% block mainbody %}
+<div class="container">
+    <div class="row home-facets">
+    {% with facet_type='home' %}
+         {% facets as facets %}
+            <div class="col-md-4">
+                <p><a href="{% url "layer_browse" %}"><i class="fa fa-square-o fa-5x rotate-45"></i></a></p>
+                <h2><a href="{% url "layer_browse" %}">{{ facets.layer|default:_("No") }} {% blocktrans count counter=facets.layer %}Layer{% plural %}Layers{% endblocktrans %}</a></h2>
+                <p>{% trans "Click the icon above to search for geospatial data by various criteria based on their metadata. Download data in standard GIS formats." %}</p>
+                {% if user.is_authenticated %}
+                <p class="text-center"><a class="btn btn-default" href="{% url "layer_upload" %}" role="button">{% trans "Add layers" %} &raquo;</a></p>
+                {% else %}
+                <p class="text-center"><a class="btn btn-default" href="{% url "layer_browse" %}" role="button">{% trans "Explore layers" %} &raquo;</a></p>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <p><a href="{% url "maps_browse" %}"><i class="fa fa-map-marker fa-5x"></i></a></p>
+                <h2><a href="{% url "maps_browse" %}">{{ facets.map|default:_("No") }} {% blocktrans count counter=facets.map %}Map{% plural %}Maps{% endblocktrans %}</a></h2>
+                <p>{% trans "Create beautiful maps by combining and styling data previously uploaded. The maps can then be shared publicly or restricted to specific users only." %}</p>
+                {% if user.is_authenticated %}
+                <p><a class="btn btn-default" href="{% url "new_map" %}" role="button">{% trans "Create maps" %} &raquo;</a></p>
+                {% else %}
+                <p><a class="btn btn-default" href="{% url "maps_browse" %}" role="button">{% trans "Explore maps" %} &raquo;</a></p>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <p><a href="{% url "profile_browse" %}"><i class="fa fa-user fa-5x"></i></a></p>
+                <h2><a href="{% url "profile_browse" %}">{{ facets.user|default:_("No") }} {% blocktrans count counter=facets.user %}User{% plural %}Users{% endblocktrans %}</a></h2>
+                <p>{% trans "Registered users may upload geospatial data and plain documents in various formats. Registered users may also create maps." %}</p>
+                <p><a class="btn btn-default" href="{% url "profile_browse" %}" role="button">{% trans "See users" %} &raquo;</a></p>
+            </div>
+    {% endwith %}
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% featured_maps as maps %}
+{% lastest_layers as layers %}
+<footer class="footer">
+    <div id="featured_header">
+        <div class="featured_section">
+            <h3>Maps Viewed Most</h3>
+        </div>
+        <div class="featured_section">
+            <h3>Layers Recently Uploaded</h3>
+        </div>
+    </div>
+    <div id="featured_data">
+        <div class="featured_section">
+            {% for map in maps %}
+                <div class="featured_dataset">
+                    <a href="{{ map.view_url }}"><img class="thumb_map" src="{{ map.thumbnail_url }}" /></a>
+                    <h5> {{map.title}} (Views: {{ map.popular_count }})</h5>
+                    <p class="date_and_owner">Last modified: {{ map.date }} by {{map.owner}}</p>
+                    <p> {{map.abstract}} </p>
+                </div>
+            {% endfor%}
+        </div>
+        <div class="featured_section">
             {% for layer in layers %}
                 <div class="featured_dataset">
-                    <a href="{{ layer.detail_url }}"><img class="thumb" src="{{ layer.thumbnail_url }}" /></a>
-                    <h4> {{layer.title}} </h4>
+                    <a href="{{ layer.detail_url }}"><img class="thumb_layer" src="{{ layer.thumbnail_url }}" /></a>
+                    <h5> {{layer.title}} </h5>
                     <p class="date_and_owner">{{ layer.date }} by {{layer.owner}}</p>
                     <p> {{layer.abstract}} </p>
                 </div>
             {% endfor%}
         </div>
-    </footer>
-    {% endblock footer %}
+    </div>
+    <div class="copyright">
+        <p>Copyright © 2016 Seychelles Geospatial Working Group | All rights reserved.</p>
+    </div>
+</footer>
+{% endblock footer %}

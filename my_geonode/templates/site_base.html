@@ -1,4 +1,16 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block extra_head %}
       <link href="{{ STATIC_URL }}css/site_base.css" rel="stylesheet"/>
 {% endblock %}
+
+    {% block title %}{% trans "Seychelles Data Sharing" %}{% endblock %}
+ {% block footer %}
+    <footer class="footer">
+      <div class="container">
+         <div class="copyright">
+            <p>Copyright © 2016 Seychelles Geospatial Working Group | All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+{% endblock footer %}
