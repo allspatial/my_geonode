@@ -12,7 +12,7 @@ Install virtualenv and virtualenvwrapper, Create a local virtual environment for
 
     $ mkdir ~/VirtualEnvs
     $ cd ~/VirtualEnvs
-    $ mkvirtualenv my_geonode
+    $ virtualenv my_geonode
     $ pip install Django==1.8.12
 
 Create a new template based on the geonode example project.::
