@@ -13,6 +13,7 @@ def lastest_layers(context):
     request = context['request']
 
     layers = Layer.objects.order_by('-upload_session__date')
+    layers = layers.exclude(upload_session__isnull=True)
 
     if settings.RESOURCE_PUBLISHING:
         layers = layers.filter(is_published=True)
